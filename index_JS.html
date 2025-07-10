@@ -1,0 +1,472 @@
+/**
+ * @file index_JS.html
+ * @description Handles the functionality of the simple text editor,
+ * including basic formatting, font size, font type, color selection,
+ * adding hyperlinks, creating lists, saving/loading content, and providing feedback.
+ */
+
+// Get references to the editor and toolbar elements
+const editor = document.getElementById('editor');
+const subjectInput = document.getElementById('subjectInput');
+const boldBtn = document.getElementById('boldBtn');
+const italicBtn = document.getElementById('italicBtn');
+const underlineBtn = document.getElementById('underlineBtn');
+const fontSizeSelect = document.getElementById('fontSize');
+const fontTypeSelect = document.getElementById('fontType');
+const textColorBtn = document.getElementById('textColorBtn');
+const colorPalette = document.getElementById('colorPalette');
+const colorSwatches = document.querySelectorAll('.color-swatch');
+const fieldCodeSelect = document.getElementById('fieldCodeSelect');
+const linkBtn = document.getElementById('linkBtn');
+const bulletListBtn = document.getElementById('bulletListBtn');
+const numberListBtn = document.getElementById('numberListBtn');
+const saveBtn = document.getElementById('saveBtn');
+const closeBtn = document.getElementById('closeBtn'); // Reference to close button
+const messageBox = document.getElementById('messageBox');
+
+let saveMessageTimeout;
+let lastFocusedElement = editor; // Initialize with editor as default
+
+// Track unsaved changes
+let isDirty = false;
+
+// Track which element was last focused (for field code insertion)
+editor.addEventListener('focus', () => {
+    lastFocusedElement = editor;
+});
+subjectInput.addEventListener('focus', () => {
+    lastFocusedElement = subjectInput;
+});
+
+
+/**
+ * Updates the visual state of a toolbar button to indicate if its
+ * corresponding formatting is active for the current selection.
+ * @param {HTMLElement} button The button element to update.
+ * @param {string} commandName The name of the execCommand associated with the button.
+ */
+function updateButtonState(button, commandName) {
+    if (document.queryCommandState(commandName)) {
+        button.classList.add('active');
+    } else {
+        button.classList.remove('active');
+    }
+}
+
+/**
+ * Displays a message in the message box.
+ * @param {string} message The text content of the message.
+ * @param {string} type The type of message ('saving', 'success', 'error').
+ * @param {boolean} dismissible If true, adds a close button for errors.
+ * @param {number} duration Optional: Duration in ms for success messages before hiding.
+ */
+function showMessage(message, type, dismissible = false, duration = 3000) {
+    clearTimeout(saveMessageTimeout); // Clear any previous timeout
+
+    messageBox.classList.remove('hidden', 'saving', 'success', 'error');
+    messageBox.classList.add(type);
+    messageBox.innerHTML = message;
+
+    if (dismissible) {
+        const closeBtn = document.createElement('span');
+        closeBtn.classList.add('close-btn');
+        closeBtn.innerHTML = '&times';
+        closeBtn.onclick = hideMessage;
+        messageBox.appendChild(closeBtn);
+    } else if (type === 'success') {
+        saveMessageTimeout = setTimeout(hideMessage, duration);
+    }
+}
+
+/**
+ * Hides the message box and clears its content.
+ */
+function hideMessage() {
+    messageBox.classList.add('hidden');
+    messageBox.innerHTML = '';
+    messageBox.classList.remove('saving', 'success', 'error');
+}
+
+/**
+ * Disables all toolbar buttons and selects to prevent interaction during save/load.
+ */
+function disableToolbar() {
+    const toolbarElements = document.querySelectorAll('#toolbar button, #toolbar select');
+    toolbarElements.forEach(el => el.disabled = true);
+    subjectInput.disabled = true; // Disable subject input
+    editor.contentEditable = 'false'; // Disable editing of the main editor
+}
+
+/**
+ * Enables all toolbar buttons and selects after save/load operation.
+ */
+function enableToolbar() {
+    const toolbarElements = document.querySelectorAll('#toolbar button, #toolbar select');
+    toolbarElements.forEach(el => el.disabled = false);
+    subjectInput.disabled = false; // Enable subject input
+    editor.contentEditable = 'true'; // Enable editing of the main editor
+}
+
+/**
+ * Applies bold formatting to the currently selected text in the editor,
+ * updates the visual state of the bold button, and returns focus to the editor.
+ */
+function applyBold() {
+    document.execCommand('bold', false, null);
+    updateButtonState(boldBtn, 'bold');
+    editor.focus();
+    isDirty = true; // Content has changed
+}
+
+/**
+ * Applies italic formatting to the currently selected text in the editor,
+ * updates the visual state of the italic button, and returns focus to the editor.
+ */
+function applyItalic() {
+    document.execCommand('italic', false, null);
+    updateButtonState(italicBtn, 'italic');
+    editor.focus();
+    isDirty = true; // Content has changed
+}
+
+/**
+ * Applies underline formatting to the currently selected text in the editor,
+ * updates the visual state of the underline button, and returns focus to the editor.
+ */
+function applyUnderline() {
+    document.execCommand('underline', false, null);
+    updateButtonState(underlineBtn, 'underline');
+    editor.focus();
+    isDirty = true; // Content has changed
+}
+
+/**
+ * Applies the selected font size to the currently selected text in the editor
+ * and returns focus to the editor.
+ */
+function applyFontSize() {
+    const size = fontSizeSelect.value;
+    document.execCommand('fontSize', false, size);
+    editor.focus();
+    isDirty = true; // Content has changed
+}
+
+/**
+ * Applies the selected font type (font name) to the currently selected text
+ * in the editor and returns focus to the editor.
+ */
+function applyFontType() {
+    const font = fontTypeSelect.value;
+    document.execCommand('fontName', false, font);
+    editor.focus();
+    isDirty = true; // Content has changed
+}
+
+/**
+ * Applies the selected text color to the currently selected text in the editor
+ * and updates the color of the text color button.
+ * @param {string} color The color to apply.
+ */
+function applyTextColor(color) {
+    document.execCommand('foreColor', false, color);
+    textColorBtn.style.color = color;
+    colorPalette.classList.add('hidden');
+    editor.focus();
+    isDirty = true; // Content has changed
+}
+
+/**
+ * Toggles the visibility of the color palette.
+ */
+function toggleColorPalette() {
+    colorPalette.classList.toggle('hidden');
+}
+
+/**
+ * Inserts a hyperlink to the currently selected text in the editor.
+ */
+function insertLink() {
+    const url = prompt('Enter the URL:', 'http://');
+    if (url) {
+        document.execCommand('createLink', false, url);
+        editor.focus();
+        isDirty = true; // Content has changed
+    }
+}
+
+/**
+ * Toggles the creation of an unordered (bulleted) list for the selected text
+ * or at the current insertion point.
+ */
+function toggleBulletList() {
+    document.execCommand('insertUnorderedList', false, null);
+    editor.focus();
+    isDirty = true; // Content has changed
+}
+
+/**
+ * Toggles the creation of an ordered (numbered) list for the selected text
+ * or at the current insertion point.
+ */
+function toggleNumberList() {
+    document.execCommand('insertOrderedList', false, null);
+    editor.focus();
+    isDirty = true; // Content has changed
+}
+
+/**
+ * Inserts a field code into the editor at the current cursor position.
+ * This is called when an item is selected from the fieldCodeSelect dropdown.
+ */
+function insertFieldCode() {
+    const selectedHeader = fieldCodeSelect.value; // This will now retrieve just "Name"
+    
+    // Check what we actually retrieved before concatenation
+    console.log('0. Selected header from dropdown:', selectedHeader); 
+
+    // NEW: Construct the full field code here - USING SQUARE BRACKETS
+    const fieldCodeToInsert = '[[' + selectedHeader + ']]'; 
+    
+    // Update console log for debugging
+    console.log('1. Value to insert (fieldCodeToInsert):', fieldCodeToInsert); 
+
+    if (selectedHeader) { // Check if a valid header was selected
+        const targetElement = lastFocusedElement;
+
+        if (targetElement === editor) {
+            document.execCommand('insertHTML', false, fieldCodeToInsert); // Use the new variable
+            console.log('2. Inserted into editor. Editor content after:', editor.innerHTML);
+        } else if (targetElement === subjectInput) {
+            const start = subjectInput.selectionStart;
+            const end = subjectInput.selectionEnd;
+            const text = subjectInput.value;
+
+            console.log('3. Subject Input BEFORE insertion:', subjectInput.value);
+            // Use the new variable for insertion
+            subjectInput.value = text.substring(0, start) + fieldCodeToInsert + text.substring(end, text.length);
+            subjectInput.selectionStart = subjectInput.selectionEnd = start + fieldCodeToInsert.length;
+            console.log('4. Subject Input AFTER insertion:', subjectInput.value);
+        }
+        targetElement.focus();
+        fieldCodeSelect.value = ""; // Reset dropdown
+        isDirty = true;
+    }
+}
+
+
+/**
+ * Calls the Apps Script server-side function to save the editor's HTML content.
+ * Now saves both subject and body.
+ */
+function saveContent() {
+    const subject = subjectInput.value;
+    const body = editor.innerHTML;
+
+    showMessage('Saving...', 'saving');
+    disableToolbar();
+
+    google.script.run
+        .withSuccessHandler(function() {
+            isDirty = false; // Content is now clean after saving
+            showMessage('Template Saved!', 'success');
+            enableToolbar();
+        })
+        .withFailureHandler(function(error) {
+            let userMessage = 'Failed to save template.';
+            if (error && error.message) {
+                if (error.message.includes('Sheet "TextEditorTemplate" not found')) {
+                    userMessage = 'Error: The "TextEditorTemplate" sheet was not found. It will be created.';
+                } else if (error.message.includes('No permission to access')) {
+                    userMessage = 'Error: Insufficient permissions. Please re-authorize the script.';
+                } else {
+                    userMessage += ' Please try again. (Details: ' + error.message + ')';
+                }
+            }
+            showMessage(userMessage, 'error', true);
+            enableToolbar();
+        })
+        .saveTemplate(subject, body);
+}
+
+
+// Add event listeners to the formatting buttons
+boldBtn.addEventListener('click', applyBold);
+italicBtn.addEventListener('click', applyItalic);
+underlineBtn.addEventListener('click', applyUnderline);
+
+// Add event listeners to the font size and font type dropdowns
+fontSizeSelect.addEventListener('change', applyFontSize);
+fontTypeSelect.addEventListener('change', applyFontType);
+
+// Add event listeners to the color button to toggle the palette
+textColorBtn.addEventListener('click', toggleColorPalette);
+
+// Add event listeners to each color swatch in the palette
+colorSwatches.forEach(swatch => {
+    swatch.addEventListener('click', function() {
+        const color = this.dataset.color;
+        applyTextColor(color);
+    });
+});
+
+// Add event listener to the field code dropdown
+fieldCodeSelect.addEventListener('change', insertFieldCode);
+
+// Add event listener for the link button
+linkBtn.addEventListener('click', insertLink);
+
+// Add event listener for the bullet list button
+bulletListBtn.addEventListener('click', toggleBulletList);
+
+// Add event listener for the number list button
+numberListBtn.addEventListener('click', toggleNumberList);
+
+// Add event listener to the save button
+saveBtn.addEventListener('click', saveContent);
+
+// Add event listener to the close button
+closeBtn.addEventListener('click', closeDialog);
+
+
+/**
+ * Updates the state of all formatting buttons whenever the selection in
+ * the editor changes. This ensures the button states reflect the
+ * formatting of the currently selected text.
+ */
+editor.addEventListener('mouseup', () => {
+    updateButtonState(boldBtn, 'bold');
+    updateButtonState(italicBtn, 'italic');
+    updateButtonState(underlineBtn, 'underline');
+    updateButtonState(bulletListBtn, 'insertUnorderedList');
+    updateButtonState(numberListBtn, 'insertOrderedList');
+    const currentColor = document.queryCommandValue('foreColor');
+    if (currentColor) {
+        textColorBtn.style.color = currentColor;
+    } else {
+        textColorBtn.style.color = 'black';
+    }
+});
+
+// Corrected: Fixed the duplicated `underlineBtn.addEventListener('click', applyUnderline);`
+// It should be updateButtonState.
+editor.addEventListener('keyup', () => {
+    updateButtonState(boldBtn, 'bold');
+    updateButtonState(italicBtn, 'italic');
+    updateButtonState(underlineBtn, 'underline');
+    updateButtonState(bulletListBtn, 'insertUnorderedList');
+    updateButtonState(numberListBtn, 'insertOrderedList');
+    const currentColor = document.queryCommandValue('foreColor');
+    if (currentColor) {
+        textColorBtn.style.color = currentColor;
+    } else {
+        textColorBtn.style.color = 'black';
+    }
+    isDirty = true; // Editor content has changed
+});
+
+
+// Mark as dirty on subject input change
+subjectInput.addEventListener('input', () => {
+    isDirty = true;
+});
+
+
+// Hide the color palette when clicking outside of it
+document.addEventListener('click', function(event) {
+    // Only hide if the click is not inside the button or the palette itself
+    if (!textColorBtn.contains(event.target) && !colorPalette.contains(event.target)) {
+        colorPalette.classList.add('hidden');
+    }
+});
+
+
+// --- Initialization Logic: Load Content & Headers ---
+document.addEventListener('DOMContentLoaded', function() {
+    showMessage('Loading template...', 'saving');
+    disableToolbar();
+
+    // Load template (subject and body)
+    google.script.run
+        .withSuccessHandler(function(templateData) {
+            subjectInput.value = templateData.subject || '';
+            editor.innerHTML = templateData.body || '';
+            editor.focus();
+            hideMessage();
+            enableToolbar();
+            loadFieldCodes();
+            isDirty = false; // Content is clean after initial load
+        })
+        .withFailureHandler(function(error) {
+            console.error('Error loading template:', error.message);
+            let userMessage = 'Failed to load template.';
+            if (error && error.message) {
+                 if (error.message.includes('Sheet "TextEditorTemplate" not found')) {
+                    userMessage = 'Error: The "TextEditorTemplate" sheet was not found. It will be created.';
+                } else if (error.message.includes('No permission to access')) {
+                    userMessage = 'Error: Insufficient permissions. Please re-authorize the script.';
+                } else {
+                    userMessage += ' Please try again. (Details: ' + error.message + ')';
+                }
+            }
+            showMessage(userMessage, 'error', true);
+            enableToolbar();
+            loadFieldCodes();
+            isDirty = false; // Even on error, assume loaded state is "clean" from what's stored
+        })
+        .loadTemplate();
+});
+
+/**
+ * Loads spreadsheet headers and populates the fieldCodeSelect dropdown.
+ */
+function loadFieldCodes() {
+    google.script.run
+        .withSuccessHandler(function(headers) {
+            fieldCodeSelect.innerHTML = '<option value="">Insert Field</option>';
+            headers.forEach(header => {
+                if (header) { // Ensure header is not empty
+                    const option = document.createElement('option');
+                    option.value = header; // *** Store only the header name here ***
+                    option.textContent = header;
+                    fieldCodeSelect.appendChild(option);
+                }
+            });
+            console.log('Field codes loaded successfully.');
+        })
+        .withFailureHandler(function(error) {
+            console.error('Error loading field codes:', error.message);
+            showMessage('Failed to load field codes. (Details: ' + error.message + ')', 'error', true, 5000);
+        })
+        .getSpreadsheetHeaders();
+}
+
+// Handle beforeunload event to warn about unsaved changes (for browser tab/window close)
+window.addEventListener('beforeunload', function(event) {
+    if (isDirty) {
+        // Most browsers prevent custom messages in beforeunload for security reasons.
+        // Returning any non-null, non-empty string will trigger the browser's default warning.
+        event.preventDefault(); // Standard practice to trigger the warning
+        event.returnValue = 'You have unsaved changes. Are you sure you want to exit?'; // For older browsers / consistency
+    }
+});
+
+// Custom close function for the dialog (called by our custom "Close" button)
+function closeDialog() {
+    if (isDirty) {
+        // Use standard browser confirm. This is safe and reliable.
+        const response = confirm('You have unsaved changes. Do you want to save before closing?');
+
+        if (response) { // User clicked OK/Yes to save
+            saveContent(); // Attempt to save. `isDirty` will be set to false on success.
+            // We don't immediately close here because `saveContent` is asynchronous.
+            // The user will need to click 'Close' again *after* the save confirmation.
+        } else { // User clicked Cancel/No (meaning they don't want to save)
+            const discardConfirmed = confirm('Discard changes and close?');
+            if (discardConfirmed) {
+                google.script.host.close(); // Close without saving
+            }
+        }
+    } else {
+        google.script.host.close(); // Close directly if no changes
+    }
+}

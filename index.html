@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Text Editor</title>
+    <style>
+        <?!= include("index_CSS") ?>
+    </style>
+</head>
+<body>
+    <div id="toolbar">
+        <button id="boldBtn"><b>B</b></button>
+        <button id="italicBtn"><i>I</i></button>
+        <button id="underlineBtn"><u>U</u></button>
+        <div class="separator"></div>
+        <select id="fontSize">
+            <option value="2">Small</option>
+            <option value="3" selected>Medium</option>
+            <option value="4">Large</option>
+        </select>
+        <div class="separator"></div>
+        <select id="fontType">
+            <option value="Arial">Arial</option>
+            <option value="Times New Roman">Times New Roman</option>
+            <option value="Verdana">Verdana</option>
+        </select>
+        <div class="separator"></div>
+        <div class="color-picker">
+            <button id="textColorBtn" style="font-family: sans-serif;">A</button>
+            <div id="colorPalette" class="hidden">
+                <button class="color-swatch" style="background-color: black;" data-color="black"></button>
+                <button class="color-swatch" style="background-color: red;" data-color="red"></button>
+                <button class="color-swatch" style="background-color: blue;" data-color="blue"></button>
+                <button class="color-swatch" style="background-color: green;" data-color="green"></button>
+                <button class="color-swatch" style="background-color: orange;" data-color="orange"></button>
+                <button class="color-swatch" style="background-color: purple;" data-color="purple"></button>
+                <button class="color-swatch" style="background-color: teal;" data-color="teal"></button>
+            </div>
+        </div>
+        <div class="separator"></div>
+        <select id="fieldCodeSelect">
+            <option value="">Insert Field</option>
+        </select>
+        <button id="linkBtn">🔗</button>
+        <button id="bulletListBtn">●</button>
+        <button id="numberListBtn">1.</button>
+        <button id="saveBtn">Save</button>
+        <button id="closeBtn">Close</button>
+    </div>
+
+    <div class="subject-container">
+        <label for="subjectInput">Subject:</label>
+        <input type="text" id="subjectInput" placeholder="Enter your email subject here...">
+    </div>
+
+    <div id="editor" contenteditable="true">
+        </div>
+
+    <div id="messageBox" class="hidden"></div>
+
+    <script>
+        <?!= include("index_JS") ?>
+    </script>
+</body>
+</html>

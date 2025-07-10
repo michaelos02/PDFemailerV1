@@ -1,0 +1,249 @@
+body {
+    font-family: sans-serif;
+    margin: 0;
+    padding: 10px;
+    background-color: #f0f0f0;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    box-sizing: border-box; /* Include padding in height calculation */
+}
+
+#toolbar {
+    display: flex;
+    flex-wrap: wrap; /* Allow wrapping on smaller screens */
+    gap: 4px; /* Spacing between buttons */
+    padding: 8px;
+    background-color: #e0e0e0;
+    border-bottom: 1px solid #ccc;
+    border-radius: 5px 5px 0 0;
+    align-items: center; /* Vertically align items */
+}
+
+#toolbar button,
+#toolbar select {
+    padding: 6px 10px;
+    border: 1px solid #ccc;
+    background-color: #f9f9f9;
+    cursor: pointer;
+    border-radius: 4px;
+    font-size: 14px;
+    min-width: 30px; /* Ensure buttons have a minimum width */
+    text-align: center;
+    box-sizing: border-box; /* Ensure padding is included in width */
+}
+
+#toolbar button:hover,
+#toolbar select:hover {
+    background-color: #e9e9e9;
+    border-color: #b0b0b0;
+}
+
+#toolbar button:active {
+    background-color: #d0d0d0;
+    border-color: #a0a0a0;
+}
+
+#toolbar button.active {
+    background-color: #cceeff; /* Highlight for active state */
+    border-color: #007bff;
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.2);
+}
+
+.separator {
+    width: 1px;
+    background-color: #ccc;
+    height: 24px; /* Adjust height to match button height */
+    margin: 0 5px;
+}
+
+#fontSize, #fontType, #fieldCodeSelect { /* Apply consistent styling to all selects */
+    padding: 6px 8px; /* Slightly less padding to fit text */
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: #f9f9f9;
+    cursor: pointer;
+}
+
+/* Color picker specific styles */
+.color-picker {
+    position: relative;
+    display: inline-block;
+}
+
+#textColorBtn {
+    color: black; /* Default color */
+}
+
+/* Update the general .hidden class */
+.hidden {
+    display: none !important; /* Force hide the element from layout */
+    opacity: 0;
+    visibility: hidden;
+}
+
+/* Keep these styles for when the palette IS visible */
+#colorPalette {
+    position: absolute;
+    top: 100%; /* Position below the button */
+    left: 0;
+    /* We will apply display: flex dynamically when not hidden */
+    flex-wrap: wrap;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 5px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    z-index: 10;
+    transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out; /* Smooth transition */
+}
+
+/* When not hidden, apply display: flex */
+#colorPalette:not(.hidden) {
+    display: flex;
+    opacity: 1;
+    visibility: visible;
+}
+
+.color-swatch {
+    width: 24px;
+    height: 24px;
+    border: 1px solid #eee;
+    cursor: pointer;
+    margin: 2px;
+    border-radius: 3px;
+}
+.color-swatch:hover {
+    border-color: #000;
+}
+
+/* Styles for the Save Button - Now Blue (Google Standard for Primary Action) */
+#toolbar #saveBtn { /* NEW: Increased specificity */
+    background-color: #1a73e8; /* Google Blue */
+    color: white; /* White text for contrast */
+    border-color: #1a73e8; /* Match border to background */
+}
+
+#toolbar #saveBtn:hover { /* NEW: Increased specificity for hover */
+    background-color: #0c5dc9; /* Darker blue on hover */
+    border-color: #0c5dc9;
+}
+
+/* Styles for the Close Button - Now Red (Google Standard for Destructive/Cancellation) */
+#toolbar #closeBtn { /* NEW: Increased specificity */
+    background-color: #ea4335; /* Google Red */
+    color: white; /* White text for contrast */
+    border-color: #ea4335; /* Match border to background */
+}
+
+#toolbar #closeBtn:hover { /* NEW: Increased specificity for hover */
+    background-color: #d93025; /* Darker red on hover */
+    border-color: #d93025;
+}
+/* NEW: Subject Input Styles */
+.subject-container {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    background-color: #f0f0f0;
+    border-bottom: 1px solid #ddd;
+}
+
+.subject-container label {
+    font-weight: bold;
+    margin-right: 10px;
+    white-space: nowrap; /* Prevent "Subject:" from wrapping */
+}
+
+#subjectInput {
+    flex-grow: 1; /* Allows input to take up available space */
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+    box-sizing: border-box; /* Include padding and border in element's total width and height */
+}
+
+#subjectInput:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+}
+
+
+#editor {
+    flex-grow: 1; /* Allows editor to take up remaining vertical space */
+    padding: 15px;
+    border: 1px solid #ccc;
+    border-top: none;
+    background-color: #fff;
+    min-height: 200px; /* Minimum height for the editor */
+    overflow-y: auto; /* Enable scrolling if content overflows */
+    border-radius: 0 0 5px 5px;
+}
+
+#editor:focus {
+    outline: none;
+    border: 1px solid #007bff; /* Ensure all borders are visible on focus */
+    box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25); /* Add a subtle glow for better visibility */
+}
+
+/* Message Box Styles */
+#messageBox {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 12px 20px;
+    border-radius: 8px;
+    color: white;
+    font-weight: bold;
+    font-size: 15px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-width: 250px;
+    text-align: center;
+}
+
+#messageBox.hidden {
+    opacity: 0;
+    visibility: hidden;
+}
+
+#messageBox:not(.hidden) {
+    opacity: 1;
+    visibility: visible;
+}
+
+#messageBox.saving {
+    background-color: #2196F3; /* Blue for saving/loading */
+}
+
+#messageBox.success {
+    background-color: #4CAF50; /* Green for success */
+}
+
+#messageBox.error {
+    background-color: #f44336; /* Red for errors */
+}
+
+.close-btn {
+    margin-left: 15px;
+    color: white;
+    font-weight: bold;
+    float: right;
+    font-size: 20px;
+    line-height: 20px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.close-btn:hover {
+    color: black;
+}
