@@ -1,3 +1,11 @@
+
+/**
+ * @file index_CSS.html
+ * @description Stylesheet for the Email Composer custom dialog.
+ * Defines layout, typography, component styling, and interactive states.
+ */
+
+/* ===== BASE LAYOUT ===== */
 body {
     font-family: sans-serif;
     margin: 0;
@@ -6,20 +14,22 @@ body {
     display: flex;
     flex-direction: column;
     height: 100vh;
-    box-sizing: border-box; /* Include padding in height calculation */
+    box-sizing: border-box;
 }
 
+/* ===== TOOLBAR ===== */
 #toolbar {
     display: flex;
-    flex-wrap: wrap; /* Allow wrapping on smaller screens */
-    gap: 4px; /* Spacing between buttons */
+    flex-wrap: wrap;
+    gap: 4px;
     padding: 8px;
     background-color: #e0e0e0;
     border-bottom: 1px solid #ccc;
     border-radius: 5px 5px 0 0;
-    align-items: center; /* Vertically align items */
+    align-items: center;
 }
 
+/* Toolbar buttons and selects */
 #toolbar button,
 #toolbar select {
     padding: 6px 10px;
@@ -28,9 +38,9 @@ body {
     cursor: pointer;
     border-radius: 4px;
     font-size: 14px;
-    min-width: 30px; /* Ensure buttons have a minimum width */
+    min-width: 30px;
     text-align: center;
-    box-sizing: border-box; /* Ensure padding is included in width */
+    box-sizing: border-box;
 }
 
 #toolbar button:hover,
@@ -45,20 +55,24 @@ body {
 }
 
 #toolbar button.active {
-    background-color: #cceeff; /* Highlight for active state */
+    background-color: #cceeff;
     border-color: #007bff;
     box-shadow: inset 0 1px 3px rgba(0,0,0,0.2);
 }
 
+/* Toolbar separator */
 .separator {
     width: 1px;
     background-color: #ccc;
-    height: 24px; /* Adjust height to match button height */
+    height: 24px;
     margin: 0 5px;
 }
 
-#fontSize, #fontType, #fieldCodeSelect { /* Apply consistent styling to all selects */
-    padding: 6px 8px; /* Slightly less padding to fit text */
+/* Font and field selects */
+#fontSize, 
+#fontType, 
+#fieldCodeSelect {
+    padding: 6px 8px;
     font-size: 14px;
     border: 1px solid #ccc;
     border-radius: 4px;
@@ -66,29 +80,20 @@ body {
     cursor: pointer;
 }
 
-/* Color picker specific styles */
+/* ===== COLOR PICKER ===== */
 .color-picker {
     position: relative;
     display: inline-block;
 }
 
 #textColorBtn {
-    color: black; /* Default color */
+    color: black;
 }
 
-/* Update the general .hidden class */
-.hidden {
-    display: none !important; /* Force hide the element from layout */
-    opacity: 0;
-    visibility: hidden;
-}
-
-/* Keep these styles for when the palette IS visible */
 #colorPalette {
     position: absolute;
-    top: 100%; /* Position below the button */
+    top: 100%;
     left: 0;
-    /* We will apply display: flex dynamically when not hidden */
     flex-wrap: wrap;
     background-color: #fff;
     border: 1px solid #ccc;
@@ -96,10 +101,9 @@ body {
     padding: 5px;
     box-shadow: 0 2px 5px rgba(0,0,0,0.2);
     z-index: 10;
-    transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out; /* Smooth transition */
+    transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
 }
 
-/* When not hidden, apply display: flex */
 #colorPalette:not(.hidden) {
     display: flex;
     opacity: 1;
@@ -114,34 +118,37 @@ body {
     margin: 2px;
     border-radius: 3px;
 }
+
 .color-swatch:hover {
     border-color: #000;
 }
 
-/* Styles for the Save Button - Now Blue (Google Standard for Primary Action) */
-#toolbar #saveBtn { /* NEW: Increased specificity */
-    background-color: #1a73e8; /* Google Blue */
-    color: white; /* White text for contrast */
-    border-color: #1a73e8; /* Match border to background */
+/* ===== ACTION BUTTONS ===== */
+/* Save button - Google Blue primary action */
+#toolbar #saveBtn {
+    background-color: #1a73e8;
+    color: white;
+    border-color: #1a73e8;
 }
 
-#toolbar #saveBtn:hover { /* NEW: Increased specificity for hover */
-    background-color: #0c5dc9; /* Darker blue on hover */
+#toolbar #saveBtn:hover {
+    background-color: #0c5dc9;
     border-color: #0c5dc9;
 }
 
-/* Styles for the Close Button - Now Red (Google Standard for Destructive/Cancellation) */
-#toolbar #closeBtn { /* NEW: Increased specificity */
-    background-color: #ea4335; /* Google Red */
-    color: white; /* White text for contrast */
-    border-color: #ea4335; /* Match border to background */
+/* Close button - Google Red destructive action */
+#toolbar #closeBtn {
+    background-color: #ea4335;
+    color: white;
+    border-color: #ea4335;
 }
 
-#toolbar #closeBtn:hover { /* NEW: Increased specificity for hover */
-    background-color: #d93025; /* Darker red on hover */
+#toolbar #closeBtn:hover {
+    background-color: #d93025;
     border-color: #d93025;
 }
-/* NEW: Subject Input Styles */
+
+/* ===== SUBJECT INPUT ===== */
 .subject-container {
     display: flex;
     align-items: center;
@@ -153,16 +160,16 @@ body {
 .subject-container label {
     font-weight: bold;
     margin-right: 10px;
-    white-space: nowrap; /* Prevent "Subject:" from wrapping */
+    white-space: nowrap;
 }
 
 #subjectInput {
-    flex-grow: 1; /* Allows input to take up available space */
+    flex-grow: 1;
     padding: 8px;
     border: 1px solid #ccc;
     border-radius: 4px;
     font-size: 14px;
-    box-sizing: border-box; /* Include padding and border in element's total width and height */
+    box-sizing: border-box;
 }
 
 #subjectInput:focus {
@@ -171,25 +178,32 @@ body {
     box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
 }
 
-
+/* ===== EDITOR ===== */
 #editor {
-    flex-grow: 1; /* Allows editor to take up remaining vertical space */
+    flex-grow: 1;
     padding: 15px;
     border: 1px solid #ccc;
     border-top: none;
     background-color: #fff;
-    min-height: 200px; /* Minimum height for the editor */
-    overflow-y: auto; /* Enable scrolling if content overflows */
+    min-height: 200px;
+    overflow-y: auto;
     border-radius: 0 0 5px 5px;
 }
 
 #editor:focus {
     outline: none;
-    border: 1px solid #007bff; /* Ensure all borders are visible on focus */
-    box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25); /* Add a subtle glow for better visibility */
+    border: 1px solid #007bff;
+    box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
 }
 
-/* Message Box Styles */
+/* ===== UTILITY CLASSES ===== */
+.hidden {
+    display: none !important;
+    opacity: 0;
+    visibility: hidden;
+}
+
+/* ===== MESSAGE BOX ===== */
 #messageBox {
     position: fixed;
     bottom: 20px;
@@ -221,18 +235,20 @@ body {
     visibility: visible;
 }
 
+/* Message box states */
 #messageBox.saving {
-    background-color: #2196F3; /* Blue for saving/loading */
+    background-color: #2196F3;
 }
 
 #messageBox.success {
-    background-color: #4CAF50; /* Green for success */
+    background-color: #4CAF50;
 }
 
 #messageBox.error {
-    background-color: #f44336; /* Red for errors */
+    background-color: #f44336;
 }
 
+/* Message box close button */
 .close-btn {
     margin-left: 15px;
     color: white;

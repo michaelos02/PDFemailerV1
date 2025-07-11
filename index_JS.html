@@ -224,8 +224,8 @@ function insertFieldCode() {
     // Check what we actually retrieved before concatenation
     console.log('0. Selected header from dropdown:', selectedHeader); 
 
-    // NEW: Construct the full field code here - USING SQUARE BRACKETS
-    const fieldCodeToInsert = '[[' + selectedHeader + ']]'; 
+    // NEW: Construct the full field code here - USING STRING CONCATENATION NOW
+    const fieldCodeToInsert = '[[' + selectedHeader + ']]' 
     
     // Update console log for debugging
     console.log('1. Value to insert (fieldCodeToInsert):', fieldCodeToInsert); 
@@ -426,7 +426,7 @@ function loadFieldCodes() {
             headers.forEach(header => {
                 if (header) { // Ensure header is not empty
                     const option = document.createElement('option');
-                    option.value = header; // *** Store only the header name here ***
+                    option.value = header; // *** CHANGED: Store only the header name here ***
                     option.textContent = header;
                     fieldCodeSelect.appendChild(option);
                 }
