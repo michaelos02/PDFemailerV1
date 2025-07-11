@@ -78,6 +78,12 @@ body {
     border-radius: 4px;
     background-color: #f9f9f9;
     cursor: pointer;
+    /* --- NEW STYLES FOR WIDTH CONTROL --- */
+    max-width: 115px; /* Adjust this value as needed for your toolbar */
+    overflow: hidden; /* Hide content that exceeds the max-width */
+    text-overflow: ellipsis; /* Display '...' for truncated text */
+    white-space: nowrap; /* Prevent text from wrapping inside the select box */
+    /* --- END NEW STYLES --- */
 }
 
 /* ===== COLOR PICKER ===== */
