@@ -1,9 +1,3 @@
-That's a smart move! A good README is essential for any GitHub repo. It helps others (and your future self!) understand what the project is, how to use it, and how to contribute.
-
-Based on all the features we've implemented, here's an updated `README.md` that's clear, comprehensive, and engaging:
-
----
-
 # Personalized Email Sender for Google Sheets
 
 This Google Apps Script project transforms your Google Sheet into a powerful personalized email sending tool, complete with dynamic field merging, attachment capabilities, and robust status tracking. It's designed to make sending personalized emails to a list of recipients as easy and reliable as possible.
@@ -82,6 +76,4 @@ This Google Apps Script project transforms your Google Sheet into a powerful per
 * `index.html`: Provides the user interface for the Email Composer dialog.
 * `preview.html`: Provides the user interface for the email preview dialog before sending.
 
----
 
-This README should give anyone a clear understanding of your project and how to get started!
