@@ -25,7 +25,9 @@ function onOpen() {
   ui.createMenu('Email Tools')
       .addItem('Open Email Composer', 'showEmailComposerDialog')
       .addSeparator()
-      .addItem('Send Personalized Emails', 'sendPersonalizedEmails') // This now triggers the preview first!
+      .addItem('Send Personalized Emails', 'sendPersonalizedEmails')
+      .addSeparator() // Add a separator before the new help item
+      .addItem('User Guide', 'showUserGuideDialog') // NEW: User Guide menu item
       .addToUi();
 }
 
@@ -39,6 +41,19 @@ function showEmailComposerDialog() {
       .setWidth(850)
       .setHeight(600)
       .setTitle('Email Composer');
+
+  SpreadsheetApp.getUi().showModalDialog(htmlOutput, htmlOutput.getTitle());
+}
+
+/**
+ * Displays the user guide in a modal dialog.
+ * The HTML content for the guide is loaded from 'userGuide.html'.
+ */
+function showUserGuideDialog() {
+  const htmlOutput = HtmlService.createHtmlOutputFromFile('userGuide.html')
+      .setWidth(850) // Adjust width as needed
+      .setHeight(600) // Adjust height as needed
+      .setTitle('Personalized Email Sender: User Guide');
 
   SpreadsheetApp.getUi().showModalDialog(htmlOutput, htmlOutput.getTitle());
 }
