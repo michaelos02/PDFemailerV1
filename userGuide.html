@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <base target="_top">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+      line-height: 1.6;
+      color: #333;
+      background-color: #fcfcfc;
+    }
+    h1 {
+      color: #0056b3;
+      font-size: 2em;
+      border-bottom: 2px solid #eee;
+      padding-bottom: 10px;
+      margin-bottom: 20px;
+    }
+    h2 {
+      color: #0066cc;
+      font-size: 1.6em;
+      margin-top: 30px;
+      border-bottom: 1px dashed #eee;
+      padding-bottom: 5px;
+    }
+    h3 {
+      color: #007bb5;
+      font-size: 1.3em;
+      margin-top: 20px;
+    }
+    h4 {
+      color: #008cc0;
+      font-size: 1.1em;
+      margin-top: 15px;
+    }
+    ul {
+      list-style-type: disc;
+      margin-left: 25px;
+    }
+    ol {
+      margin-left: 25px;
+    }
+    li {
+      margin-bottom: 8px;
+    }
+    strong {
+      font-weight: bold;
+    }
+    em {
+      font-style: italic;
+    }
+    .note {
+      background-color: #e6f7ff;
+      border-left: 4px solid #33aaff;
+      padding: 10px 15px;
+      margin: 15px 0;
+      border-radius: 4px;
+    }
+    .screenshot-placeholder {
+      border: 1px dashed #ccc;
+      padding: 15px;
+      margin: 20px 0;
+      background-color: #f9f9f9;
+      color: #666;
+      text-align: center;
+      font-style: italic;
+      min-height: 100px; /* Give it some visual space */
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    hr {
+        border: 0;
+        height: 1px;
+        background-color: #ccc;
+        margin: 30px 0;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Personalized Email Sender: User Guide</h1>
+
+  <p>This tool transforms your Google Sheet into a powerful email sending machine, allowing you to send personalized emails to many recipients at once. It's great for sending updates, personalized messages, or documents to a list of contacts directly from your spreadsheet.</p>
+
+  <hr>
+
+  <h2>1. Setting Up Your Google Sheet</h2>
+  <p>Before you start sending emails, your Google Sheet needs to be set up correctly.</p>
+
+  <h3>Essential Columns:</h3>
+  <ul>
+    <li><strong><code>Email</code> (Mandatory):</strong>
+      <ul>
+        <li>You <strong>must</strong> have a column titled exactly <code>Email</code>. This column contains the email addresses of your recipients.</li>
+        <li>Make sure each email address is valid. If an email address is missing or invalid, the script will skip or report an error for that row.</li>
+      </ul>
+    </li>
+  </ul>
+
+  <h3>Optional Columns for Attachments:</h3>
+  <ul>
+    <li><strong><code>DocLink</code> (Optional):</strong>
+      <ul>
+        <li>If you want to attach Google Docs (converted to PDF) to your emails, create a column titled exactly <code>DocLink</code>.</li>
+        <li>In this column, you can enter either the <strong>full URL</strong> of a Google Doc (e.g., <code>https://docs.google.com/document/d/YOUR_DOC_ID/edit</code>) or just the <strong>Google Doc ID</strong> itself (e.g., <code>YOUR_DOC_ID</code>).</li>
+        <li><span class="note"><strong>Important:</strong> Ensure that the Google Doc is shared with <strong>"Anyone with the link" (Viewer access at minimum)</strong>, otherwise the script may not be able to access it for conversion.</span></li>
+      </ul>
+    </li>
+  </ul>
+
+  <h3>Example Sheet Layout:</h3>
+  <p>Here’s an example of how your sheet might look. Your headers can be anything you want, as long as <code>Email</code> (and <code>DocLink</code> if used) are present.</p>
+
+  <div class="screenshot-placeholder">
+    <img src="https://drive.google.com/thumbnail?id=18IeMg4h7suV0vneb-ZIEhpxuuDjvJdgk&sz=s1000" alt="Header1" style="max-width:100%; height:auto; display:block; margin: 0 auto;"> 
+  </div>
+
+  <hr>
+
+  <h2>2. Creating Your Email Template</h2>
+  <p>The Email Composer allows you to design the subject and body of your personalized emails.</p>
+
+  <h3>A. Opening the Email Composer:</h3>
+  <ol>
+    <li>In your Google Sheet, go to the top menu.</li>
+    <li>Click <code>Email Tools</code>.</li>
+    <li>Select <code>Open Email Composer</code>.</li>
+  </ol>
+
+  <div class="screenshot-placeholder">
+    <img src="https://drive.google.com/thumbnail?id=1QVdzSNX0HQtGFfxkCYTWMqCFVlFpKdz4&sz=s1000" alt="Composer Menu" style="max-width:100%; height:auto; display:block; margin: 0 auto;">
+  </div>
+
+  <h3>B. Designing Your Email:</h3>
+  <p>The Email Composer dialog will appear.</p>
+
+  <div class="screenshot-placeholder">
+    <img src="https://drive.google.com/thumbnail?id=1g5ggd-MrMNv6cIAA_Jx8606IIS1_IZqy&sz=s1000" alt="Composer window" style="max-width:100%; height:auto; display:block; margin: 0 auto;">
+  </div>
+
+  <ol>
+    <li><strong>Subject:</strong> Type your email's subject line.</li>
+    <li><strong>Body:</strong> Craft your email's content. You can use rich text formatting (bold, italics, lists, etc.) using the toolbar provided.</li>
+  </ol>
+
+  <h3>C. Inserting &amp; Styling Personalized Fields:</h3>
+  <p>To make your emails unique for each recipient, you can insert <strong>Field Codes</strong>. These codes will be replaced with data from your spreadsheet columns for each email sent.</p>
+
+  <ul>
+    <li><strong>How to Insert Field Codes:</strong>
+      <ul>
+        <li><strong>Type Manually:</strong> You can type the field code directly into your subject or body using the format <code>[[Column Name]]</code>. For example, if you have a column named <code>First Name</code>, you would type <code>[[First Name]]</code>.</li>
+        <li><strong>Use the Dropdown:</strong> A simpler way is to click the <code>Insert Field</code> dropdown menu above the email body. This menu automatically pulls all the header names from your active Google Sheet. Select a header, and the corresponding field code will be inserted at your cursor.</li>
+      </ul>
+      <div class="screenshot-placeholder">
+        <img src="https://drive.google.com/thumbnail?id=1JECcbTAnZnRREhkTzoP906ZD6COSrxvg&sz=s1000" alt="Field code use" style="max-width:100%; height:auto; display:block; margin: 0 auto;">
+      </div>
+    </li>
+    <li><strong>Styling Field Codes (Important!):</strong>
+      <ul>
+        <li>If you want to apply formatting (like <strong>bold</strong> or <em>italics</em>) to a field code, you <strong>must select the entire code</strong>, including the <code>[[</code> and <code>]]</code> brackets, before applying the style.</li>
+        <li><strong>Correct:</strong> <strong><code>[[First Name]]</code></strong></li>
+        <li><strong>Incorrect:</strong> <code>[[</code><strong><code>First Name</code></strong><code>]]</code> (This might not format correctly for the personalized text)</li>
+      </ul>
+
+    </li>
+  </ul>
+
+  <h3>D. Saving Your Template:</h3>
+  <ol>
+    <li>Once you are happy with your subject and body, click the <code>Save Template</code> button at the bottom of the composer.</li>
+    <li>You'll see a confirmation message. Your template is now saved in a hidden sheet named <code>EmailComposerTemplate</code>. You can close the composer.</li>
+  </ol>
+
+  <hr>
+
+  <h2>3. Sending Personalized Emails</h2>
+  <p>This is the final step where the magic happens!</p>
+
+  <h3>A. Initiating the Send:</h3>
+  <ol>
+    <li>Make sure the Google Sheet you want to use for sending (the one with your data) is the <strong>active sheet</strong>.</li>
+    <li>In your Google Sheet, go to the top menu.</li>
+    <li>Click <code>Email Tools</code>.</li>
+    <li>Select <code>Send Personalized Emails</code>.</li>
+  </ol>
+
+  <div class="screenshot-placeholder">
+    <img src="https://drive.google.com/thumbnail?id=1ZHEheJVsp6Nz2VXipK-vP_-0N45gHvpF&sz=s1000" alt="send menu" style="max-width:100%; height:auto; display:block; margin: 0 auto;">
+  </div>
+
+  <h3>B. Reviewing the Email Preview:</h3>
+  <ul>
+    <li>A dialog titled "Email Preview" will pop up. This is a <strong>mandatory step</strong> to prevent accidental sends!</li>
+    <li>It shows you exactly how the <strong><em>first email</em></strong> will look, using the data from the first row of your sheet.</li>
+    <li>Carefully review the subject and body to ensure all fields are replaced correctly and the formatting is as expected.</li>
+  </ul>
+
+  <div class="screenshot-placeholder">
+    <img src="https://drive.google.com/thumbnail?id=1XQTuopO1ahL62hHuxYVh_esFTSaKelu3&sz=s1000" alt="Preview send" style="max-width:100%; height:auto; display:block; margin: 0 auto;">
+  </div>
+
+  <h3>C. Confirming the Send:</h3>
+  <ul>
+    <li>If the preview looks correct, click the <strong><code>Send All Emails</code></strong> button. The script will then proceed to send emails to all eligible rows in your sheet.</li>
+    <li>If you notice any issues, click the <strong><code>Cancel Sending</code></strong> button. The dialog will close, and no emails will be sent. You can then go back to your sheet or the Email Composer to make adjustments.</li>
+  </ul>
+
+  <hr>
+
+  <h2>4. Monitoring Email Status</h2>
+  <p>After sending, the script provides feedback directly in your sheet.</p>
+
+  <h3>A. The "Email Status" Column:</h3>
+  <ul>
+    <li>The script will automatically create a new column titled <code>Email Status</code> in your active sheet (if it doesn't already exist).</li>
+    <li>This column will update for each row, showing the outcome of the email send.</li>
+  </ul>
+
+  <div class="screenshot-placeholder">
+    <img src="https://drive.google.com/thumbnail?id=1atAio4bK7WFh2yfg7nLDsGgz64AawFhH&sz=s1000" alt="Email status" style="max-width:100%; height:auto; display:block; margin: 0 auto;">
+  </div>
+
+  <h3>B. Understanding Status Messages:</h3>
+  <ul>
+    <li><strong><code>Email sent on [Date/Time]</code></strong>: The email was successfully sent.</li>
+    <li><strong><code>Error: [Error Message]</code></strong>: The email failed to send for this row. The error message will provide details (e.g., "Invalid email", "Could not attach document").
+      <ul>
+        <li><strong>Important:</strong> Error messages in the "Email Status" column will appear in <strong>red text</strong> for easy visibility.</li>
+      </ul>
+    </li>
+    <li><strong><code>Skipped: Status already present ('[Previous Status]')</code></strong>: The script detected that this row already had a status in the "Email Status" column and skipped sending an email for it.</li>
+  </ul>
+
+  <h3>C. Resending Emails:</h3>
+  <p>This feature allows you to control which emails are sent:</p>
+  <ul>
+    <li>To <strong>resend an email</strong> for a specific row, simply <strong>delete the content</strong> from its <code>Email Status</code> cell.</li>
+    <li>When you run <code>Send Personalized Emails</code> again, the script will process that row.</li>
+    <li>Rows with any text in their <code>Email Status</code> cell will be skipped.</li>
+  </ul>
+
+  <hr>
+
+  <h2>5. Troubleshooting &amp; Tips</h2>
+
+  <h3>A. "Insert Field" Button Pushing to a New Line in the Composer</h3>
+  <p>If you notice that the <strong><code>Insert Field</code></strong> button (or other elements) in the Email Composer dialog are getting pushed to a new line, it's usually because one or more of your <strong>column header names in the Google Sheet are very long</strong>. The Composer tries to display all header names in the dropdown, and if they're too wide, they can affect the layout.</p>
+
+  <p><strong>Solution:</strong></p>
+  <ul>
+    <li><strong>Shorten Your Google Sheet Headers:</strong> The quickest way to resolve this is to go back to your Google Sheet and <strong>shorten any excessively long header names</strong> in the first row. For example, if you have <code>Customer Payment Confirmation Number</code>, you might shorten it to <code>Payment No.</code>.</li>
+    <li><strong>Re-open Composer:</strong> After shortening your headers in the sheet, close and re-open the Email Composer. The layout should now be corrected.</li>
+  </ul>
+
+  <h3>B. Script Permissions Issues:</h3>
+  <p>The first time you run the script, Google will ask for permissions. This is normal. Ensure you grant the necessary permissions for the script to:</p>
+  <ul>
+    <li>Send email on your behalf.</li>
+    <li>Access your Google Sheets.</li>
+    <li>Access your Google Drive (if using attachments).</li>
+  </ul>
+  <p>If you accidentally deny permissions or encounter issues, sometimes re-running the script or checking your Google Account security settings for third-party apps can help.</p>
+
+  <h3>C. Attachments Not Working:</h3>
+  <ul>
+    <li>Double-check that the Google Doc specified in the <code>DocLink</code> column exists and is accessible.</li>
+    <li>Ensure the Google Doc has its sharing settings set to <strong>"Anyone with the link can view"</strong> (or higher permissions if you prefer, but "Viewer" is sufficient for the script to convert it to PDF).</li>
+  </ul>
+
+</body>
+</html>

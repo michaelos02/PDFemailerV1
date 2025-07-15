@@ -22,11 +22,23 @@ const BODY_CELL = 'B2';
  */
 function onOpen() {
   const ui = SpreadsheetApp.getUi();
-  ui.createMenu('Email Tools')
+
+  // Create the main Email Tools menu
+  const emailToolsMenu = ui.createMenu('Email Tools')
       .addItem('Open Email Composer', 'showEmailComposerDialog')
       .addSeparator()
-      .addItem('Send Personalized Emails', 'sendPersonalizedEmails') // This now triggers the preview first!
-      .addToUi();
+      .addItem('Send Personalized Emails', 'sendPersonalizedEmails');
+
+  // Create the 'Help' submenu
+  const helpSubMenu = ui.createMenu('Help')
+      .addItem('User Guide', 'showUserGuideDialog')
+      .addItem('Disclaimer', 'showDisclaimerDialog')
+      .addItem('License', 'showLicenseDialog');
+
+  // Add the 'Help' submenu to the main Email Tools menu
+  emailToolsMenu.addSeparator() // Optional: Separator before the Help submenu
+                .addSubMenu(helpSubMenu)
+                .addToUi();
 }
 
 /**
@@ -43,6 +55,44 @@ function showEmailComposerDialog() {
   SpreadsheetApp.getUi().showModalDialog(htmlOutput, htmlOutput.getTitle());
 }
 
+/**
+ * Displays the user guide in a modal dialog.
+ * The HTML content for the guide is loaded from 'userGuide.html'.
+ */
+function showUserGuideDialog() {
+  const htmlOutput = HtmlService.createHtmlOutputFromFile('userGuide.html')
+      .setWidth(850) // Adjust width as needed
+      .setHeight(600) // Adjust height as needed
+      .setTitle('Personalized Email Sender: User Guide');
+
+  SpreadsheetApp.getUi().showModalDialog(htmlOutput, htmlOutput.getTitle());
+}
+
+/**
+ * Displays the disclaimer in a modal dialog.
+ * The HTML content is loaded from 'disclaimer.html'.
+ */
+function showDisclaimerDialog() {
+  const htmlOutput = HtmlService.createHtmlOutputFromFile('disclaimer.html')
+      .setWidth(600) // Adjust width as needed
+      .setHeight(400) // Adjust height as needed
+      .setTitle('Disclaimer');
+
+  SpreadsheetApp.getUi().showModalDialog(htmlOutput, htmlOutput.getTitle());
+}
+
+/**
+ * Displays the license information in a modal dialog.
+ * The HTML content is loaded from 'license.html'.
+ */
+function showLicenseDialog() {
+  const htmlOutput = HtmlService.createHtmlOutputFromFile('license.html')
+      .setWidth(700) // Adjust width as needed
+      .setHeight(500) // Adjust height as needed
+      .setTitle('License Information');
+
+  SpreadsheetApp.getUi().showModalDialog(htmlOutput, htmlOutput.getTitle());
+}
 // --- Helper Functions ---
 
 /**
